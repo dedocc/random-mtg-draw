@@ -17,10 +17,9 @@ export default async function handler(req, res) {
         const start = Date.now();
 
         async function getFirstInQueue() {
-            const len = await redis.llen("queue");
-            if (len === 0) return [];
-            const urls = await redis.lpop("queue");
-            return urls;
+            const jsonStr = await redis.lpop("queue");
+            if (!jsonStr) return [];
+            return JSON.parse(jsonStr);
         }
 
         let urls = await getFirstInQueue();
