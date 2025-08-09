@@ -156,11 +156,14 @@ class PickScreen extends HTMLElement {
         }
     }
 
-    sendToPrinter() {
+    async sendToPrinter() {
         const urls = Array.from(this.wrapper.querySelectorAll(".selected"))
             .map(img => img.getAttribute("src"));
         if (urls.length > 0) {
-            console.log(urls);
+            await fetch("api/print", {
+                method:"POST",
+                body: JSON.stringify(urls)
+            })
         }
     }
 }
