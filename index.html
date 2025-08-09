@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Random Card Generator</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <link rel="icon" href="src/img/favicon.png" /> 
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+
+        <script src="src/components/mana-cnt.js"></script>
+        <script src="src/components/pickscreen.js"></script>
+    </head>
+    
+    <body>
+        <div class="mana_counter">
+            <mana-cnt id="W" icon="src/img/mana/w.svg"></mana-cnt>
+            <mana-cnt id="U" icon="src/img/mana/u.svg"></mana-cnt>
+            <mana-cnt id="B" icon="src/img/mana/b.svg"></mana-cnt>
+            <mana-cnt id="R" icon="src/img/mana/r.svg"></mana-cnt>
+            <mana-cnt id="G" icon="src/img/mana/g.svg"></mana-cnt>
+            <mana-cnt id="C" icon="src/img/mana/c.svg"></mana-cnt>
+        </div>
+        <div class="draw_container">
+            <input type="button" onclick="drawCards()" id="draw_button" value="Draw"></input>
+            <select id="card_number">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5" selected>5</option>
+            </select>
+        </div>
+
+        <script>
+            let headers = new Headers({
+                "Accept"       : "application/json",
+                "Content-Type" : "application/json",
+                "User-Agent"   : "MtgRandomPicker/1.0"
+            });
+
+            const banned_cards = [];
+
+            function disableDraw() {
+                const btn = document.getElementById("draw_button");
+                btn.value = "Loading...";
+                btn.disabled = true;
+            }
+
+            function enableDraw() {
+                const btn = document.getElementById("draw_button");
+                btn.value = "Draw";
+                btn.disabled = false;
+            }
+
+            function getMana() {
+                var mana = "";
+                var total = 0;
+                document.querySelectorAll('mana-cnt').forEach(function(item) {
+                    if (item.id === "C") {
+                        mana = item.cnt.textContent + mana;
+                    } else {
+                        mana += item.id.repeat(item.cnt.textContent);
+                    }
+                    total += parseInt(item.cnt.textContent);
+                })
+                console.log(mana, total);
+                return [mana, total];
+            }
+
+            async function drawCards() {
+                disableDraw();
+                const pickscreen = document.createElement("pick-screen");
+                document.querySelector("body").appendChild(pickscreen);
+
+                const card_number = document.getElementById("card_number").value;
+                const mana = getMana(); // (string, total)
+                const fetched_cards = [];
+                while (fetched_cards.length < card_number) {
+                    await fetch(`https://api.scryfall.com/cards/random?q=m%3C=${mana[0]}+mv%3C=${mana[1]}+-t:land+f:vintage`,
+                        {method: "GET",
+                         headers: headers
+                        })
+                        .then(function(response) {return response.json();})
+                        .then(function(json) {
+                            if (!banned_cards.includes(json.id)) {
+                                banned_cards.push(json.id);
+                                fetched_cards.push(json.image_uris.large);
+                            }
+                        });
+                }
+                fetched_cards.forEach(function(url) {
+                    const card = document.createElement("img");
+                    card.src = url;
+                    pickscreen.wrapper.appendChild(card);
+                });
+                pickscreen.setAttribute("status", "fetched");
+                enableDraw();
+            }
+        </script>
+    </body>
+</html>

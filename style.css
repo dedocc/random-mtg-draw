@@ -1,0 +1,50 @@
+@font-face {
+    font-family: "beleren";
+    src: url("src/fonts/belerensmallcaps-bold.ttf") format("opentype");
+}
+
+body {
+    box-sizing: border-box;
+    font-family: "beleren";
+    display: flex;
+    flex-direction: column;
+    gap: 10vh;
+    background-image: url("src/img/background.jpg");
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+.draw_container {
+    display:flex;
+    background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+}
+
+input, select {
+    all: unset;
+    box-sizing: border-box;
+    font-size: 30px;
+    padding: 10px 30px;
+    color: transparent;
+    background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+  -webkit-background-clip: text;
+          background-clip: text;
+    border: 5px groove #fff;
+    border-radius: 5px;
+}
+
+select::after {
+    content: " a ";
+}
+
+.mana_counter {
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns: auto auto;
+}
