@@ -36,7 +36,7 @@ class PickScreen extends HTMLElement {
                     flex-direction: column;
                     gap: 20px;
                     align-items: center;
-                    padding: 0 15px;
+                    padding: 15px;
                     overflow: scroll;
                 }
                 #cards_wrapper img {
@@ -44,7 +44,8 @@ class PickScreen extends HTMLElement {
                     border-radius:20px;
                 }
                 #cards_wrapper img.selected {
-                    border: 2px solid #f0f;
+                    border: 4px solid #f0f;
+                    margin: -4px;
                 }
                 .actions {
                     margin: 15px;
@@ -59,6 +60,14 @@ class PickScreen extends HTMLElement {
                                 radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
                     border: 5px groove #fff;
                     border-radius: 5px;
+                }
+                .error {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    color: #fff;
+                    font-size: 36px;
                 }
 
                 .loader {
@@ -112,6 +121,17 @@ class PickScreen extends HTMLElement {
         this.postfetch.querySelector("#closebtn").onclick = () => {
             this.remove();
         };
+
+        this.errorscreen = document.createElement("div");
+        this.errorscreen.setAttribute("class", "error");
+        this.errorscreen.innerHTML = `
+            <p>ERROR FETCHING CARDS</p>
+            <button id="retrybtn">retry</button>
+        `
+        this.errorscreen.querySelector("#retrybtn").onclick = () => {
+            this.remove();
+            window.drawCards();
+        }
     }
 
     connectedCallback() {
@@ -124,6 +144,10 @@ class PickScreen extends HTMLElement {
                 case "fetched":
                     this.loader.remove();
                     this.screen.appendChild(this.postfetch);
+                    break;
+                case "error":
+                    this.loader.remove();
+                    this.screen.appendChild(this.errorscreen);
                     break;
             }
         }

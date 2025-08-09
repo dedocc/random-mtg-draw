@@ -75,25 +75,30 @@
                 const card_number = document.getElementById("card_number").value;
                 const mana = getMana(); // (string, total)
                 const fetched_cards = [];
-                while (fetched_cards.length < card_number) {
-                    await fetch(`https://api.scryfall.com/cards/random?q=m%3C=${mana[0]}+mv%3C=${mana[1]}+-t:land+f:vintage`,
-                        {method: "GET",
-                         headers: headers
-                        })
-                        .then(function(response) {return response.json();})
-                        .then(function(json) {
-                            if (!banned_cards.includes(json.id)) {
-                                banned_cards.push(json.id);
-                                fetched_cards.push(json.image_uris.large);
-                            }
-                        });
+                try {
+                    while (fetched_cards.length < card_number) {
+                        await fetch(`https://api.scryfall.com/cards/random?q=m%3C=${mana[0]}+mv%3C=${mana[1]}+-t:land+f:vintage`,
+                            {method: "GET",
+                             headers: headers
+                            })
+                            .then(function(response) {return response.json();})
+                            .then(function(json) {
+                                if (!banned_cards.includes(json.id)) {
+                                    banned_cards.push(json.id);
+                                    fetched_cards.push(json.image_uris.large);
+                                }
+                            });
+                    }
+                } catch (err) {
+                    pickscreen.setAttribute("status", "error");
+                    return 1;
                 }
                 fetched_cards.forEach(function(url) {
                     const card = document.createElement("img");
                     card.src = url;
                     card.selected = false;
                     card.onclick = () => {
-                        card.selected = !card.selected;
+                        card.setAttribute("class", card.getAttribute("class") === "selected" ? "":"selected");
                     }
                     pickscreen.wrapper.appendChild(card);
                 });
