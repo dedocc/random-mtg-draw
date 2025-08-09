@@ -8,6 +8,7 @@ function sleep(ms) {
 
 export default async function handler(req, res) {
     if (req.method === "POST") {
+        //log here
         console.log("POST body:", req.body);
         const { urls } = req.body;
         await redis.lpush("queue", JSON.stringify(urls));
