@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/dedocc/random-mtg-draw#readme",
   "dependencies": {
-    "ioredis": "^5.7.0"
+    "@upstash/redis": "^1.35.3"
   }
 }
