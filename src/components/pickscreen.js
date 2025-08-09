@@ -121,6 +121,9 @@ class PickScreen extends HTMLElement {
         this.postfetch.querySelector("#closebtn").onclick = () => {
             this.remove();
         };
+        this.postfetch.querySelector("#printbtn").onclick = () => {
+            this.sendToPrinter();
+        }
 
         this.errorscreen = document.createElement("div");
         this.errorscreen.setAttribute("class", "error");
@@ -150,6 +153,14 @@ class PickScreen extends HTMLElement {
                     this.screen.appendChild(this.errorscreen);
                     break;
             }
+        }
+    }
+
+    sendToPrinter() {
+        const urls = Array.from(this.wrapper.querySelectorAll(".selected"))
+            .map(img => img.getAttribute("src"));
+        if (urls.length > 0) {
+            console.log(urls);
         }
     }
 }
