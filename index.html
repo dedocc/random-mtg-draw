@@ -91,6 +91,10 @@
                 fetched_cards.forEach(function(url) {
                     const card = document.createElement("img");
                     card.src = url;
+                    card.selected = false;
+                    card.onclick = () => {
+                        card.selected = !card.selected;
+                    }
                     pickscreen.wrapper.appendChild(card);
                 });
                 pickscreen.setAttribute("status", "fetched");

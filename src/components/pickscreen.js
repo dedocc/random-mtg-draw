@@ -43,6 +43,9 @@ class PickScreen extends HTMLElement {
                     width: 300px;
                     border-radius:20px;
                 }
+                #cards_wrapper img.selected {
+                    border: 2px solid #f0f;
+                }
                 .actions {
                     margin: 15px;
                     display: flex;
